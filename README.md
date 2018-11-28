@@ -34,5 +34,5 @@
 
 ## Примеры использования
 ``` bash
-$ ./magvk_linux_amd64 -base 16 < input_file
+$ ./magvk_linux_amd64 -base 16 -i input_file -o output_file
 ```
