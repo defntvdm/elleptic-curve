@@ -72,6 +72,12 @@ func mulP(n *big.Int, point Point) Point {
 }
 
 func sumP(p1, p2 Point) Point {
+	if p1.x == nil {
+		return p2
+	}
+	if p2.x == nil {
+		return p1
+	}
 	var k *big.Int = new(big.Int)
 	if p1.x.Cmp(p2.x) != 0 {
 		subX := new(big.Int).Sub(p2.x, p1.x)
@@ -81,6 +87,9 @@ func sumP(p1, p2 Point) Point {
 
 		k.Mul(subX, subY)
 	} else {
+		if p1.y.Cmp(p2.y) != 0 || p1.y.Cmp(zero) == 0 {
+			return fieldZero
+		}
 		numerator := new(big.Int).Exp(p1.x, two, P)
 		denominator := new(big.Int).SetInt64(2)
 

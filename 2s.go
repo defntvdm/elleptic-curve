@@ -67,6 +67,12 @@ func mul2S(n *big.Int, point Point) Point {
 }
 
 func sum2S(p1, p2 Point) Point {
+	if p1.x == nil {
+		return p2
+	}
+	if p2.x == nil {
+		return p1
+	}
 	var k *big.Int = new(big.Int)
 	var x3, y3 *big.Int
 	if p1.x.Cmp(p2.x) != 0 {

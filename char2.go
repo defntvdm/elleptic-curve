@@ -38,7 +38,6 @@ func Mod(x *big.Int) *big.Int {
 func Inverse(x *big.Int) *big.Int {
 	value := []*big.Int{x, polynomial}
 	xCol := []*big.Int{one, zero}
-	polyCol := []*big.Int{zero, one}
 
 	length := 2
 
@@ -48,25 +47,20 @@ func Inverse(x *big.Int) *big.Int {
 		if v1len == v2len {
 			value = append(value, new(big.Int).Xor(value[length-1], value[length-2]))
 			xCol = append(xCol, new(big.Int).Xor(xCol[length-1], xCol[length-2]))
-			polyCol = append(polyCol, new(big.Int).Xor(polyCol[length-1], polyCol[length-2]))
 			length++
 		} else {
 			if v1len < v2len {
 				value = append(value, new(big.Int).Lsh(value[length-1], uint(v2len-v1len)))
 				xCol = append(xCol, new(big.Int).Lsh(xCol[length-1], uint(v2len-v1len)))
-				polyCol = append(polyCol, new(big.Int).Lsh(polyCol[length-1], uint(v2len-v1len)))
 				length++
 				value[length-1].Xor(value[length-1], value[length-3])
 				xCol[length-1].Xor(xCol[length-1], xCol[length-3])
-				polyCol[length-1].Xor(polyCol[length-1], polyCol[length-3])
 			} else {
 				value = append(value, new(big.Int).Lsh(value[length-2], uint(v1len-v2len)))
 				xCol = append(xCol, new(big.Int).Lsh(xCol[length-2], uint(v1len-v2len)))
-				polyCol = append(polyCol, new(big.Int).Lsh(polyCol[length-2], uint(v1len-v2len)))
 				length++
 				value[length-1].Xor(value[length-1], value[length-2])
 				xCol[length-1].Xor(xCol[length-1], xCol[length-2])
-				polyCol[length-1].Xor(polyCol[length-1], polyCol[length-2])
 			}
 		}
 	}
