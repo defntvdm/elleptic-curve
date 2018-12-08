@@ -62,7 +62,6 @@ func main() {
 		flag.Usage()
 		os.Exit(1)
 	}
-	configLines := make([]string, 3)
 
 	inputFile, err := os.Open(inputFileName)
 	if err != nil {
@@ -78,6 +77,7 @@ func main() {
 	}
 	defer outputFile.Close()
 
+	configLines := make([]string, 3)
 	scanner := bufio.NewScanner(inputFile)
 
 	for i := 0; i < cap(configLines); i++ {
@@ -101,9 +101,10 @@ func main() {
 		init2(configLines[1], configLines[2])
 	default:
 		P = parseBigNum(configLines[0], false)
-		aP, bP = parseAB(configLines[2])
+		aP, bP = parseAB(configLines[1])
 		aP.Mod(aP, P)
 		bP.Mod(bP, P)
+		solveTaskP(configLines[len(configLines)-1])
 	}
 	if err := scanner.Err(); err != nil {
 		fmt.Fprintln(os.Stderr, "Ошибка ввода")
@@ -112,6 +113,7 @@ func main() {
 
 	for scanner.Scan() {
 		task := scanner.Text()
+
 		switch configLines[0] {
 		case nonSuperSingular:
 			solveTask2N(task)
