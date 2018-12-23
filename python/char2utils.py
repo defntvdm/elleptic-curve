@@ -1,4 +1,6 @@
-def mul(n1: int, n2: int, polynomial: int):
+# -*- coding: cp1251 -*-
+
+def mul(n1, n2, polynomial):
     if n1 == 0 or n2 == 0:
         return 0
     res = n1
@@ -9,7 +11,7 @@ def mul(n1: int, n2: int, polynomial: int):
     return mod(res, polynomial)
 
 
-def mod(number: int, polynomial: int):
+def mod(number, polynomial):
     bit_len = number.bit_length()
     polybl = polynomial.bit_length()
     while bit_len >= polybl:
@@ -18,7 +20,7 @@ def mod(number: int, polynomial: int):
     return number
 
 
-def inverse(number: int, polynomial: int) -> int:
+def inverse(number, polynomial):
     value = [number, polynomial]
     x_col = [1, 0]
     while value[-1] != 1:
@@ -41,29 +43,31 @@ def inverse(number: int, polynomial: int) -> int:
     return mod(x_col[-1], polynomial)
 
 
-def formatPoint(p, length) -> str:
+def formatPoint(p, length):
+    if p.x == None:
+        return 'E'
     return '({}, {})'.format(
         bin(p.x)[2:].rjust(length, '0'),
         bin(p.y)[2:].rjust(length, '0'),
     )
 
 
-def formatSum2(p1, p2, res, length: int) -> str:
-    return '{} + {} = {}\n'.format(
+def formatSum2(p1, p2, res, length):
+    return '{} + {} = {}'.format(
         formatPoint(p1, length),
         formatPoint(p2, length),
         formatPoint(res, length),
     )
 
 
-def formatMul2(p, num, res, base: int, length: int) -> str:
+def formatMul2(p, num, res, base, length):
     if base == 10:
         num = str(num)
     elif base == 2:
         num = bin(num)[2:]
     else:
         num = hex(num)[2:]
-    return '{} * {} = {}\n'.format(
+    return '{} * {} = {}'.format(
         formatPoint(p, length),
         num,
         formatPoint(res, length),

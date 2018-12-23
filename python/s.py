@@ -1,6 +1,7 @@
-from typing import List
+# -*- coding: cp1251 -*-
 
 from char2utils import formatMul2, formatSum2, mul, mod, inverse
+from parsers import parse_e
 
 
 class Point:
@@ -49,31 +50,36 @@ class Point:
 
 
 def solveS(
-    tokens: List[str],
-    base: int,
-    polynomial: int,
-    a: int,
-    b: int,
-    c: int,
-) -> str:
+    tokens,
+    polynomial,
+    a,
+    b,
+    c,
+):
     Point.polynomial = polynomial
     Point.a = a
     Point.b = b
     Point.c = c
-    if tokens[0] == 'РЈ':
+    if tokens[0] == 'У':
         if len(tokens) != 4:
-            print('РќРµРІРµСЂРЅС‹Р№ РІРІРѕРґ')
+            print('Неверный ввод')
             exit(1)
-        num = int(tokens[3], base)
-        point = Point(int(tokens[1], 2), int(tokens[2], 2))
+        num, base = parse_e(tokens[3])
+        x = parse_e(tokens[1])[0]
+        y = parse_e(tokens[2])
+        point = Point(x, y)
         return formatMul2(point, num, point * num, base, polynomial.bit_length() - 1)
-    elif tokens[0] == 'РЎ':
+    elif tokens[0] == 'С':
         if len(tokens) != 5:
-            print('РќРµРІРµСЂРЅС‹Р№ РІРІРѕРґ')
+            print('Неверный ввод')
             exit(1)
-        point1 = Point(int(tokens[1], 2), int(tokens[2], 2))
-        point2 = Point(int(tokens[3], 2), int(tokens[4], 2))
+        x1 = parse_e(tokens[1])[0]
+        y1 = parse_e(tokens[2])[0]
+        x2 = parse_e(tokens[3])[0]
+        y2, base = parse_e(tokens[4])
+        point1 = Point(x1, y1)
+        point2 = Point(x2, y2)
         return formatSum2(point1, point2, point1 + point2, polynomial.bit_length() - 1)
     else:
-        print("РћР¶РёРґР°Р»Р°СЃСЊ РѕРїРµСЂР°С†РёСЏ СЃР»РѕР¶РµРЅРёСЏ РґРІСѓС… С‚РѕС‡РµРє 'РЎ' РёР»Рё СѓРјРЅРѕР¶РµРЅРёСЏ С‚РѕС‡РєРё РЅР° С‡РёСЃР»Рѕ 'РЈ'")
+        print("Ожидалась операция сложения двух точек 'С' или умножения точки на число 'У'")
         exit(1)

@@ -1,12 +1,14 @@
+# -*- coding: cp1251 -*-
+
 from sys import exit
-from typing import List
+from parsers import parse_e
 
 class Point:
     modulus = None
     a = None
     b = None
 
-    def __init__(self, x: int=None, y: int=None):
+    def __init__(self, x=None, y=None):
         self.x = x
         self.y = y
 
@@ -38,7 +40,7 @@ class Point:
         
         return Point(x3, y3)
 
-    def __mul__(self, n: int):
+    def __mul__(self, n):
         if n < 0:
             new_point = Point(self.x, self.modulus - self.y)
             return new_point * -n
@@ -52,7 +54,7 @@ class Point:
         return result
 
 
-def inverse(number: int, modulus: int) -> int:
+def inverse(number, modulus):
     number %= modulus
     prev_n = 0
     cur_n = 1
@@ -65,18 +67,17 @@ def inverse(number: int, modulus: int) -> int:
     return cur_n % modulus
 
 
-
-def formatMulP(p: Point, num: int, res: Point, base: int) -> str:
-    if base == 10:
-        n = str(num)
-    elif base == 16:
+def formatMulP(p, num, res, base, num_base):
+    if num_base == 2:
+        n = bin(num)[2:]
+    elif num_base == 16:
         n = hex(num)[2:]
     else:
-        n = bin(num)[2:]
-    return '{} * {} = {}\n'.format(formatPoint(p, base), n, formatPoint(res, base))
+        n = str(num)
+    return '{} * {} = {}'.format(formatPoint(p, base), n, formatPoint(res, base))
 
 
-def formatPoint(p: Point, base: int):
+def formatPoint(p, base):
     if p.x == None:
         return 'E'
     if base == 10:
@@ -87,28 +88,34 @@ def formatPoint(p: Point, base: int):
         x, y = bin(p.x)[2:], bin(p.y)[2:]
     return '({}, {})'.format(x, y)
 
-def formatSumP(p1: Point, p2: Point, res: Point, base: int) -> str:
-    return '{} + {} = {}\n'.format(formatPoint(p1, base), formatPoint(p2, base), formatPoint(res, base))
+def formatSumP(p1, p2, res, base):
+    return '{} + {} = {}'.format(formatPoint(p1, base), formatPoint(p2, base), formatPoint(res, base))
 
 
-def solveP(tokens: List[str], base: int, p: int, a: int, b: int) -> str:
+def solveP(tokens, p, a, b):
     Point.modulus = p
     Point.a = a
     Point.b = b
-    if tokens[0] == 'РЈ':
+    if tokens[0] == 'У':
         if len(tokens) != 4:
-            print('РќРµРІРµСЂРЅС‹Р№ РІРІРѕРґ')
+            print('Неверный ввод')
             exit(1)
-        num = int(tokens[3], base)
-        point = Point(int(tokens[1], base), int(tokens[2], base))
-        return formatMulP(point, num, point * num, base)
-    elif tokens[0] == 'РЎ':
+        num, num_base = parse_e(tokens[3])
+        x = parse_e(tokens[1])[0]
+        y, base = parse_e(tokens[2])
+        point = Point(x, y)
+        return formatMulP(point, num, point * num, base, num_base)
+    elif tokens[0] == 'С':
         if len(tokens) != 5:
-            print('РќРµРІРµСЂРЅС‹Р№ РІРІРѕРґ')
+            print('Неверный ввод')
             exit(1)
-        point1 = Point(int(tokens[1], base), int(tokens[2], base))
-        point2 = Point(int(tokens[3], base), int(tokens[4], base))
+        x1 = parse_e(tokens[1])[0]
+        y1 = parse_e(tokens[2])[0]
+        x2 = parse_e(tokens[3])[0]
+        y2, base = parse_e(tokens[4])
+        point1 = Point(x1, y1)
+        point2 = Point(x2, y2)
         return formatSumP(point1, point2, point1 + point2, base)
     else:
-        print("РћР¶РёРґР°Р»Р°СЃСЊ РѕРїРµСЂР°С†РёСЏ СЃР»РѕР¶РµРЅРёСЏ РґРІСѓС… С‚РѕС‡РµРє 'РЎ' РёР»Рё СѓРјРЅРѕР¶РµРЅРёСЏ С‚РѕС‡РєРё РЅР° С‡РёСЃР»Рѕ 'РЈ'")
+        print("Ожидалась операция сложения двух точек 'С' или умножения точки на число 'У'")
         exit(1)
